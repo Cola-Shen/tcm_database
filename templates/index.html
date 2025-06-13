@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>Topit之中西醫合作無間</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    input[type="text"] {
+      width: 60%;
+      padding: 8px;
+      font-size: 16px;
+    }
+    input[type="submit"] {
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result-section {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .section-title {
+      border-bottom: 2px solid #4CAF50;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      color: #4CAF50;
+    }
+    .not-found {
+      text-align: center;
+      font-size: 18px;
+      color: #a00;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Topit之中西醫合作無間</h1>
+
+  <form method="post">
+    <input type="text" name="keyword" placeholder="請輸入關鍵字" value="{{ query }}" required />
+    <input type="submit" value="查詢" />
+  </form>
+
+  {% if result %}
+    <div class="result-section">
+      <div class="section-title">中醫（TCM）資料</div>
+      <p><strong>類型：</strong>{{ result.TCM.type }}</p>
+      <p><strong>說明：</strong>{{ result.TCM.description }}</p>
+      <p><strong>治療建議：</strong>{{ result.TCM.treatment }}</p>
+    </div>
+
+    <div class="result-section">
+      <div class="section-title">西醫（Med）資料</div>
+      <p><strong>類型：</strong>{{ result.Med.type }}</p>
+      <p><strong>說明：</strong>{{ result.Med.description }}</p>
+      <p><strong>治療建議：</strong>{{ result.Med.treatment }}</p>
+    </div>
+  {% elif query %}
+    <div class="not-found">
+      查無關鍵字「{{ query }}」的相關資料。
+    </div>
+  {% endif %}
+</body>
+</html>
