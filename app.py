@@ -2,12 +2,12 @@
 # data.json:用來儲存中醫資料
 # index.html:建立網頁查詢系統
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template
 import json
 
 app = Flask(__name__)
 
-# 讀取 JSON 資料
+# 載入資料
 with open('data.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
@@ -20,10 +20,11 @@ def search():
     keyword = request.args.get('q', '').lower()
     results = [
         item for item in data
-        if keyword in item['name'].lower() or keyword in item.get('description', '').lower()
+        if keyword in item['keyword'].lower()
+           or keyword in item['TCM']['description'].lower()
+           or keyword in item['Med']['description'].lower()
     ]
-    return render_template('index.html', results=results)
+    return render_template('index.html', results=results, query=keyword)
 
 if __name__ == '__main__':
     app.run()
-
