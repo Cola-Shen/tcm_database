@@ -2,31 +2,30 @@
 # data.json:用來儲存中醫資料
 # index.html:建立網頁查詢系統
 
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return '歡迎使用中西整合查詢系統'
-
-# 其他查詢功能路由也可放在這裡
-
 from flask import Flask, request, jsonify
 import json
 
 app = Flask(__name__)
 
+# 首頁
+@app.route('/')
+def home():
+    return '歡迎使用中西整合查詢系統'
+
 # 讀取中西整合資料庫 JSON
 with open('data.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
+# 查詢功能
 @app.route('/search')
 def search():
     keyword = request.args.get('q', '').lower()
 
-    # 使用模糊查詢（包含關鍵字即符合）
-    results = [item for item in data if keyword in item['name'].lower() or keyword in item.get('description', '').lower()]
+    # 使用模糊查詢（名稱或描述中包含關鍵字）
+    results = [
+        item for item in data
+        if keyword in item['name'].lower() or keyword in item.get('description', '').lower()
+    ]
 
     return jsonify(results)
 
