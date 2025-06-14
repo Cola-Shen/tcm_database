@@ -1,38 +1,31 @@
+<!-- templates/browse.html -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>中西整合資料瀏覽</title>
-  <style>
-    body { font-family: "微軟正黑體", sans-serif; margin: 20px; }
-    .item { margin-bottom: 20px; }
-    .keyword { font-size: 1.2em; font-weight: bold; color: #2c3e50; cursor: pointer; }
-    .details { margin-left: 20px; }
-    hr { border: none; border-top: 1px solid #ddd; margin: 15px 0; }
-  </style>
-  <script>
-    function toggle(id) {
-      const el = document.getElementById(id);
-      el.style.display = el.style.display === 'block' ? 'none' : 'block';
-    }
-  </script>
+    <meta charset="UTF-8">
+    <title>瀏覽中西整合資料庫</title>
 </head>
 <body>
-  <h1>中西整合資料瀏覽</h1>
-  <a href="/">回首頁</a> | <a href="/search.html">關鍵字查詢</a>
-  {% for item in data %}
-    <div class="item">
-      <div class="keyword" onclick="toggle('d{{ loop.index0 }}')">
-        {{ item.keyword }}
-      </div>
-      <div class="details" id="d{{ loop.index0 }}" style="display:none;">
-        <div><strong>中醫（{{ item.TCM.type }}）：</strong><br>{{ item.TCM.description }}</div>
-        <div><strong>治療：</strong>{{ item.TCM.treatment }}</div>
-        <div><strong>西醫（{{ item.Med.type }}）：</strong><br>{{ item.Med.description }}</div>
-        <div><strong>治療：</strong>{{ item.Med.treatment }}</div>
-      </div>
-      <hr>
-    </div>
-  {% endfor %}
+    <h1>📚 中西整合資料庫瀏覽</h1>
+    <p><a href="/">回到首頁</a></p>
+
+    {% if data %}
+        <ul>
+        {% for item in data %}
+            <li>
+                <strong>關鍵字：</strong>{{ item.keyword }}<br>
+                <strong>中醫（{{ item.TCM.type }}）：</strong><br>
+                - 說明：{{ item.TCM.description }}<br>
+                - 治療：{{ item.TCM.treatment }}<br><br>
+                <strong>西醫（{{ item.Med.type }}）：</strong><br>
+                - 說明：{{ item.Med.description }}<br>
+                - 治療：{{ item.Med.treatment }}<br>
+                <hr>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>目前尚無資料可瀏覽。</p>
+    {% endif %}
 </body>
 </html>
