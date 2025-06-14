@@ -1,0 +1,24 @@
+<!-- templates/herb_detail.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <title>{{ herb['name'] }} 詳細資料</title>
+</head>
+<body>
+    <h1>{{ herb['name'] }}</h1>
+    <p><strong>來源：</strong> {{ herb.get('source', '無資料') }}</p>
+    <p><strong>別名：</strong> {{ herb.get('alias', '無資料') }}</p>
+    <p><strong>成分：</strong> {{ herb.get('components', '無資料') }}</p>
+    <p><strong>藥理：</strong> {{ herb.get('pharmacology', '無資料') }}</p>
+    <p><strong>性味與歸經：</strong> {{ herb.get('properties', '無資料') }}</p>
+    <p><strong>功效：</strong> {{ herb.get('effects', '無資料') }}</p>
+    <p><strong>應用：</strong> {{ herb.get('application', '無資料') }}</p>
+    <p><strong>用量與用法：</strong> {{ herb.get('usage', '無資料') }}</p>
+    <p><strong>使用注意：</strong> {{ herb.get('caution', '無資料') }}</p>
+    <p><strong>方例：</strong> {{ herb.get('prescriptions', '無資料') }}</p>
+
+    <p><a href="{{ url_for('herbs_category', category_name=herb['category']) }}">回 {{ herb['category'] }} 分類</a></p>
+    <p><a href="{{ url_for('herbs') }}">回方藥分類列表</a></p>
+</body>
+</html>
