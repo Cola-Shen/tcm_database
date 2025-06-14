@@ -2,7 +2,7 @@
 # data.json:用來儲存中醫資料
 # index.html:建立網頁查詢系統
 
-from flask import Flask, request, render_template
+from flask import Flask, request, jsonify, render_template
 import json
 
 app = Flask(__name__)
@@ -10,6 +10,10 @@ app = Flask(__name__)
 # 載入資料
 with open('data.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
+
+@app.route('/browse')
+def browse():
+    return render_template('browse.html', data=data)
 
 @app.route('/')
 def home():
