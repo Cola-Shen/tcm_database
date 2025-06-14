@@ -2,6 +2,16 @@
 # data.json:用來儲存中醫資料
 # index.html:建立網頁查詢系統
 
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return '歡迎使用中西整合查詢系統'
+
+# 其他查詢功能路由也可放在這裡
+
 from flask import Flask, request, jsonify
 import json
 
