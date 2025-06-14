@@ -1,0 +1,24 @@
+<!-- templates/herbs_category.html -->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8" />
+    <title>分類：{{ category_name }}</title>
+</head>
+<body>
+    <h1>分類：{{ category_name }}</h1>
+    {% if herbs %}
+    <ul>
+        {% for herb in herbs %}
+        <li>
+            <a href="{{ url_for('herb_detail', herb_name=herb['name']) }}">{{ herb['name'] }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>此分類尚無藥材資料。</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('herbs') }}">回方藥分類列表</a></p>
+</body>
+</html>
