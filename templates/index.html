@@ -9,7 +9,7 @@
     <h1>中西整合查詢系統</h1>
     <form method="GET" action="/search">
         <label for="q">請輸入關鍵字：</label>
-        <input type="text" id="q" name="q" required>
+        <input type="text" id="q" name="q" value="{{ query or '' }}" required>
         <button type="submit">搜尋</button>
     </form>
 
@@ -18,7 +18,16 @@
         {% if results %}
             <ul>
                 {% for item in results %}
-                    <li><strong>{{ item.name }}</strong>: {{ item.description }}</li>
+                    <li>
+                        <strong>關鍵字：</strong>{{ item.keyword }}<br>
+                        <strong>中醫（{{ item.TCM.type }}）：</strong><br>
+                        - 說明：{{ item.TCM.description }}<br>
+                        - 治療：{{ item.TCM.treatment }}<br><br>
+                        <strong>西醫（{{ item.Med.type }}）：</strong><br>
+                        - 說明：{{ item.Med.description }}<br>
+                        - 治療：{{ item.Med.treatment }}<br>
+                        <hr>
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
