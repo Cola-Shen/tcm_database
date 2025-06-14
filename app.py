@@ -29,5 +29,25 @@ def search():
 def browse():
     return render_template('browse.html', data=data)
 
+@app.route('/herbs')
+def show_herb_categories():
+    return render_template('herbs.html', categories=herb_data)
+
+@app.route('/herbs/<category>')
+def show_herbs_by_category(category):
+    for item in herb_data:
+        if item['category'] == category:
+            return render_template('herbs_category.html', category=item)
+    return "分類不存在", 404
+
+@app.route('/herb/<herb_name>')
+def show_herb_detail(herb_name):
+    for cat in herb_data:
+        for herb in cat['herbs']:
+            if herb['name'] == herb_name:
+                return render_template('herb_detail.html', herb=herb)
+    return "藥物不存在", 404
+
+
 if __name__ == '__main__':
     app.run()
