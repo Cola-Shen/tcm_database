@@ -7,11 +7,16 @@
 </head>
 <body>
     <h1>中西整合查詢系統</h1>
+
     <form method="GET" action="/search">
         <label for="q">請輸入關鍵字：</label>
         <input type="text" id="q" name="q" value="{{ query or '' }}" required>
         <button type="submit">搜尋</button>
     </form>
+
+    <p>
+        👉 <a href="/browse">瀏覽所有資料</a>
+    </p>
 
     {% if results is defined %}
         <h2>查詢結果：</h2>
@@ -34,5 +39,4 @@
             <p>查無相關結果。</p>
         {% endif %}
     {% endif %}
-</body>
-</html>
+</body
