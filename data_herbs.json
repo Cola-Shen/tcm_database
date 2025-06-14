@@ -1,44 +1,100 @@
-[
-  {
-    "category": "辛溫解表藥",
-    "description": "辛溫解表藥多屬辛溫，能發散風寒，適用於外感風寒表證，如惡寒、發熱、無汗等。",
-    "herbs": [
-      {
-        "name": "麻黃",
-        "alias": "草麻黃",
-        "source": "麻黃科植物草麻黃、木賊麻黃或中麻黃的乾燥草質莖",
-        "components": "含麻黃鹼、生物鹼、揮發油等多種有機酸與無機元素",
-        "pharmacology": "發汗解熱、平喘、利尿、抑制流感病毒、興奮中樞",
-        "properties": "辛、微苦，溫。歸肺、膀胱經。",
-        "effects": "發汗、平喘、利尿",
-        "applications": [
-          "治療風寒感冒，惡寒發熱、無汗等表實證",
-          "風寒咳喘，搭配杏仁、甘草為三拗湯",
-          "水腫兼表證，與白朮、生薑同用為越婢加朮湯",
-          "風濕痹痛、陰疽、痰核等症"
-        ],
-        "dosage": "1.5～9 公克，宜先煎。解表生用，平喘炙用。",
-        "cautions": "表虛自汗、陰虛盜汗、腎不納氣者禁用，夏季忌用",
-        "formulas": [
-          "麻黃湯《傷寒論》",
-          "小青龍湯《傷寒論》",
-          "大青龍湯《傷寒論》",
-          "麻杏甘石湯《傷寒論》"
-        ],
-        "bencao": {
-          "性味": "辛，溫，微苦",
-          "歸經": "肺、膀胱，兼走心、大腸",
-          "功能": [
-            "發汗解肌，去營中寒邪",
-            "調血脈、通九竅、開毛孔"
-          ],
-          "主治": [
-            "中風傷寒、溫瘧、欬逆氣喘",
-            "皮膚風疹痹痛、水腫目赤等"
-          ],
-          "禁忌": "過量汗多傷陽，夏月禁用"
-        }
-      }
-    ]
-  }
-]
+from flask import Flask, request, render_template
+import json
+
+app = Flask(__name__)
+
+# 載入中西醫綜合資料
+with open('data.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+# 載入中藥方藥資料
+with open('data_herbs.json', 'r', encoding='utf-8') as f:
+    herb_data = json.load(f)
+
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/search')
+def search():
+    keyword = request.args.get('q', '').lower()
+    results = []
+
+    # 中西醫綜合資料搜尋
+    for item in data:
+        if (keyword in item['keyword'].lower() or
+            keyword in item['TCM']['description'].lower() or
+            keyword in item['Med']['description'].lower()):
+            results.append(item)
+
+    # 中藥資料搜尋
+    for category in herb_data:
+        for herb in category.get('herbs', []):
+            searchable_text = ' '.join([
+                herb.get('name', ''),
+                herb.get('alias', ''),
+                herb.get('source', ''),
+                herb.get('components', ''),
+                herb.get('pharmacology', ''),
+                herb.get('properties', ''),
+                herb.get('effects', ''),
+                herb.get('dosage', ''),
+                herb.get('cautions', ''),
+                ' '.join(herb.get('applications', [])),
+                ' '.join(herb.get('formulas', [])),
+                herb.get('bencao', {}).get('性味', ''),
+                herb.get('bencao', {}).get('歸經', ''),
+                ' '.join(herb.get('bencao', {}).get('功能', [])),
+                ' '.join(herb.get('bencao', {}).get('主治', [])),
+                herb.get('bencao', {}).get('禁忌', '')
+            ]).lower()
+
+            if keyword in searchable_text:
+                results.append({
+                    'keyword': herb.get('name'),
+                    'TCM': {
+                        'type': '中藥',
+                        'description': herb.get('pharmacology', ''),
+                        'treatment': herb.get('applications', [])
+                    },
+                    'Med': {
+                        'type': '',
+                        'description': '',
+                        'treatment': ''
+                    }
+                })
+
+    return render_template('index.html', results=results, query=keyword)
+
+
+@app.route('/browse')
+def browse():
+    return render_template('browse.html', data=data)
+
+
+@app.route('/herbs')
+def show_herb_categories():
+    return render_template('herbs.html', categories=herb_data)
+
+
+@app.route('/herbs/<category>')
+def show_herbs_by_category(category):
+    for item in herb_data:
+        if item['category'] == category:
+            return render_template('herbs_category.html', category=item)
+    return "分類不存在", 404
+
+
+@app.route('/herb/<herb_name>')
+def show_herb_detail(herb_name):
+    for cat in herb_data:
+        for herb in cat['herbs']:
+            if herb['name'] == herb_name:
+                return render_template('herb_detail.html', herb=herb)
+    return "藥物不存在", 404
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
